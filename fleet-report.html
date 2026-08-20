@@ -1,100 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<meta name="theme-color" content="#0A2647" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#0A2647">
 <title>Fleet Field Visit Report</title>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <style>
-:root{--navy:#0A2647;--gold:#E8A33D;--bg:#F5F6F8;--card:#fff;--line:#D8DDE5;--text:#17202A;--muted:#64748B;--ok:#16794A;--danger:#B42318}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text)}
-.wrap{max-width:560px;margin:0 auto;padding:0 12px 30px}.top{background:var(--navy);color:white;margin:0 -12px 14px;padding:18px 16px}.top h1{font-size:22px;margin:0 0 4px}.top p{margin:0;color:#D6E0EC;font-size:13px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0;box-shadow:0 2px 8px rgba(15,23,42,.04)}
-.card h2{font-size:15px;margin:0 0 12px;color:var(--navy)}label{display:block;font-size:12px;font-weight:650;margin:10px 0 5px;color:#334155}
-input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:16px;background:#fff;color:var(--text)}textarea{min-height:76px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.chips{display:flex;flex-wrap:wrap;gap:7px}.chip{border:1px solid var(--line);border-radius:18px;padding:8px 10px;font-size:13px;background:#fff}.chip input{width:auto;margin:0 5px 0 0;vertical-align:middle}
-.check{display:flex;gap:9px;align-items:flex-start;background:#EEF8F2;border:1px solid #CDE7D8;padding:11px;border-radius:10px}.check input{width:auto;margin-top:3px}.check span{font-size:13px;line-height:1.4}
-.actions{position:sticky;bottom:0;background:rgba(245,246,248,.96);backdrop-filter:blur(8px);padding:10px 0 4px}.btn{width:100%;border:0;border-radius:11px;padding:13px 14px;font-size:16px;font-weight:750;margin:5px 0;cursor:pointer}.primary{background:var(--navy);color:#fff}.share{background:#16794A;color:#fff}.secondary{background:#fff;border:1px solid var(--navy);color:var(--navy)}.note{font-size:12px;color:var(--muted);line-height:1.45}.status{display:none;padding:10px 12px;border-radius:10px;margin:8px 0;font-size:13px}.status.ok{display:block;background:#EAF7EF;color:#125A37;border:1px solid #B9DFC8}.status.err{display:block;background:#FFF0EE;color:var(--danger);border:1px solid #F2C6C2}.photoNames{font-size:12px;color:var(--muted);margin-top:6px;word-break:break-word}
-@media(max-width:430px){.grid2,.grid3{grid-template-columns:1fr}.top h1{font-size:20px}}
+:root{--navy:#0A2647;--green:#128C7E;--bg:#f4f6f8;--card:#fff;--line:#d9dee5;--text:#17202a;--muted:#64748b;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,system-ui,sans-serif;color:var(--text)}
+.wrap{max-width:560px;margin:auto;padding:0 12px 150px}.top{margin:0 -12px 14px;padding:18px 16px;background:var(--navy);color:#fff}
+.top h1{margin:0 0 4px;font-size:22px}.top p{margin:0;color:#d6e0ec;font-size:13px;line-height:1.4}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+h2{margin:0 0 10px;font-size:15px;color:var(--navy)}label{display:block;font-size:12px;font-weight:700;color:#334155;margin:10px 0 5px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:16px;background:#fff}
+textarea{min-height:72px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:18px;padding:7px 9px;font-size:13px;background:#fff}.chip input{width:auto;margin:0}
+.stop{border:1px solid #e2e7ed;border-radius:12px;padding:11px;margin:10px 0;background:#fafbfc}.stophead{display:flex;justify-content:space-between;align-items:center}
+.remove{border:0;background:none;color:var(--red);font-weight:700;font-size:12px}.add{width:100%;border:1px dashed #9b6b1d;background:#fff9ef;color:#805514;border-radius:10px;padding:11px;font-weight:700}
+.check{display:flex;gap:8px;align-items:flex-start}.check input{width:auto;margin-top:2px}.check span{font-size:13px;line-height:1.4}
+.preview{display:none}.reportbox{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}.reportbox h1{font-size:19px;color:var(--navy);margin:0 0 12px}
+.reportbox pre{white-space:pre-wrap;word-break:break-word;font-family:Arial,system-ui,sans-serif;font-size:13px;line-height:1.5;margin:0}
+.status{display:none;padding:10px 12px;border-radius:10px;font-size:13px;margin:10px 0}.status.ok{display:block;background:#eaf7ef;color:#125a37}.status.err{display:block;background:#fff0ee;color:var(--red)}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:rgba(244,246,248,.97);border-top:1px solid var(--line);padding:8px 12px 12px;z-index:10}
+.bottomin{max-width:560px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{border:0;border-radius:11px;padding:13px 10px;font-size:14px;font-weight:800}
+.primary{background:var(--navy);color:#fff}.wa{background:#25D366;color:#083b22}.light{background:#fff;border:1px solid var(--navy);color:var(--navy)}.full{grid-column:1/-1}
+.note{grid-column:1/-1;text-align:center;color:var(--muted);font-size:11px;margin:0}
+@media(max-width:430px){.grid2{grid-template-columns:1fr}}
+@media print{body{background:#fff}.formpart,.bottom,.status{display:none!important}.wrap{max-width:none;padding:0}.preview{display:block!important}.reportbox{border:0;padding:0}.reportbox h1{font-size:20px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><h1>Fleet Field Visit Report</h1><p>Fill → Download PDF → Share with your reporting boss</p></div>
-
-  <div class="card"><h2>1. Executive Details</h2>
-    <label>Dealership *</label><input id="dealership" required placeholder="Dealership name" />
-    <div class="grid2"><div><label>Branch *</label><input id="branch" required placeholder="Branch" /></div><div><label>CA / Sales Executive *</label><input id="ca" required placeholder="Name" /></div></div>
-    <div class="grid2"><div><label>CRM ID</label><input id="crm" placeholder="CRM ID" /></div><div><label>Visit Date *</label><input type="date" id="date" required /></div></div>
-    <label>Travel Mode</label><select id="travel"><option>Bike</option><option>Pooling</option><option>Dealership Car</option><option>Public Transport</option><option>Other</option></select>
-  </div>
-
-  <div class="card"><h2>2. Activity</h2>
-    <label>Activity Type *</label><div class="chips" id="activityChips"></div>
-    <label>Location / Customer Visited *</label><input id="location" required placeholder="Location / customer name" />
-    <div class="grid3"><div><label>Start Time</label><input type="time" id="start" /></div><div><label>End Time</label><input type="time" id="end" /></div><div><label>KM Covered</label><input type="number" min="0" id="km" placeholder="0" /></div></div>
-    <label>Outcome / Key Achievement *</label><textarea id="outcome" required placeholder="What happened during this visit?"></textarea>
-  </div>
-
-  <div class="card"><h2>3. Outcome Summary</h2>
-    <div class="grid3"><div><label>Contacts Met</label><input type="number" min="0" id="contacts" value="0" /></div><div><label>Enquiries</label><input type="number" min="0" id="enquiries" value="0" /></div><div><label>Test Drives</label><input type="number" min="0" id="testdrives" value="0" /></div></div>
-  </div>
-
-  <div class="card"><h2>4. Field Photos</h2>
-    <input id="photos" type="file" accept="image/*" capture="environment" multiple />
-    <div class="photoNames" id="photoNames">No photos selected</div>
-    <p class="note">Photos selected here will be added to the PDF when possible.</p>
-  </div>
-
-  <div class="card"><h2>5. Observation</h2>
-    <label>What Went Right</label><textarea id="right" placeholder="Positive response / achievement"></textarea>
-    <label>Blockers / What Went Wrong</label><textarea id="wrong" placeholder="Issues / challenges"></textarea>
-    <label>Other Observation</label><textarea id="other" placeholder="Optional"></textarea>
-    <label>Reporting In-charge Name</label><input id="incharge" placeholder="Reporting boss / in-charge" />
-  </div>
-
-  <div class="card"><h2>6. Declaration</h2>
-    <label class="check"><input type="checkbox" id="declare" /><span>I confirm the above details are true and accurate to the best of my knowledge.</span></label>
-  </div>
-
-  <div id="status" class="status"></div>
-  <div class="actions">
-    <button class="btn primary" onclick="downloadPDF()">⬇ Download Report PDF</button>
-    <button class="btn share" onclick="sharePDF()">📤 Share PDF</button>
-    <button class="btn secondary" onclick="clearForm()">Clear Form</button>
-    <p class="note" style="text-align:center;margin:6px 4px">On Android, “Share PDF” opens the phone share sheet when supported. Otherwise download the PDF and attach it in WhatsApp.</p>
-  </div>
+<div class="top formpart"><h1>Fleet Field Visit Report</h1><p>Fill the report and share it directly to WhatsApp. For a file copy, use Save / Print PDF.</p></div>
+<div class="formpart">
+<div class="card"><h2>1. Sales Executive Details</h2><label>Dealership *</label><input id="dealership" placeholder="Dealership name"><div class="grid2"><div><label>Branch *</label><input id="branch" placeholder="Branch"></div><div><label>Sales Executive / CA *</label><input id="ca" placeholder="Name"></div></div><div class="grid2"><div><label>CRM ID</label><input id="crm" placeholder="CRM ID"></div><div><label>Date *</label><input type="date" id="date"></div></div><label>Travel Mode</label><select id="travel"><option>Bike</option><option>Pooling</option><option>Dealership Car</option><option>Public Transport</option><option>Other</option></select></div>
+<div class="card"><h2>2. Activity Type</h2><div class="chips" id="chips"></div></div>
+<div class="card"><h2>3. Field Visits</h2><div id="stops"></div><button class="add" type="button" onclick="addStop()">+ Add Another Visit</button></div>
+<div class="card"><h2>4. Outcome Summary</h2><div class="grid2"><div><label>Contacts Met</label><input type="number" min="0" id="contacts" value="0"></div><div><label>Enquiries</label><input type="number" min="0" id="enquiries" value="0"></div></div><label>Test Drives</label><input type="number" min="0" id="td" value="0"></div>
+<div class="card"><h2>5. Observation</h2><label>What Went Right</label><textarea id="right"></textarea><label>Blockers / What Went Wrong</label><textarea id="wrong"></textarea><label>Other Observation</label><textarea id="other"></textarea><label>Reporting In-charge</label><input id="incharge" placeholder="Manager / reporting boss"></div>
+<div class="card"><h2>6. Declaration</h2><label class="check"><input type="checkbox" id="declare"><span>I confirm the above details are true and accurate to the best of my knowledge.</span></label></div>
 </div>
+<div id="status" class="status"></div><div id="preview" class="preview"><div class="reportbox"><h1>Fleet Field Visit Report</h1><pre id="reportText"></pre></div></div>
+</div>
+<div class="bottom"><div class="bottomin"><button class="btn light" onclick="generate()">Generate Report</button><button class="btn primary" onclick="savePdf()">Save / Print PDF</button><button class="btn wa full" onclick="shareWhatsApp()">Share Report on WhatsApp</button><button class="btn light full" onclick="copyReport()">Copy Report Text</button><p class="note">WhatsApp opens with the report ready to send. Select the same dealership group and tap Send.</p></div></div>
 <script>
-const TYPES=["Event","Feet on Street","Airport","Fuel Station","Travel Operator","Aggregator","Referrer","Government Department","Corporate House","Test Drive","Delivery","Other"];
-const chips=document.getElementById('activityChips');
-TYPES.forEach((t,i)=>{const l=document.createElement('label');l.className='chip';l.innerHTML=`<input type="checkbox" class="act" value="${t}">${t}`;chips.appendChild(l)});
-const today=new Date();document.getElementById('date').value=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
-const statusBox=document.getElementById('status');
-function setStatus(msg,type='ok'){statusBox.className='status '+type;statusBox.textContent=msg;statusBox.scrollIntoView({behavior:'smooth',block:'nearest'});setTimeout(()=>{statusBox.className='status'},5000)}
-document.getElementById('photos').addEventListener('change',e=>{const f=[...e.target.files];document.getElementById('photoNames').textContent=f.length?f.map(x=>x.name).join(', '):'No photos selected'});
-function val(id){return (document.getElementById(id).value||'').trim()}
-function selectedActivities(){return [...document.querySelectorAll('.act:checked')].map(x=>x.value)}
-function validate(){const missing=[];[['dealership','Dealership'],['branch','Branch'],['ca','CA / Sales Executive'],['date','Visit Date'],['location','Location / Customer'],['outcome','Outcome']].forEach(([id,n])=>{if(!val(id))missing.push(n)});if(!selectedActivities().length)missing.push('Activity Type');if(!document.getElementById('declare').checked)missing.push('Declaration');if(missing.length){setStatus('Please complete: '+missing.join(', '),'err');return false}return true}
-function cleanText(s){return String(s||'—').replace(/[\u2013\u2014]/g,'-').replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"')}
-function getData(){return {dealership:val('dealership'),branch:val('branch'),ca:val('ca'),crm:val('crm')||'—',date:val('date'),travel:val('travel'),activities:selectedActivities().join(', '),location:val('location'),start:val('start')||'—',end:val('end')||'—',km:val('km')||'0',outcome:val('outcome'),contacts:val('contacts')||'0',enquiries:val('enquiries')||'0',testdrives:val('testdrives')||'0',right:val('right')||'—',wrong:val('wrong')||'—',other:val('other')||'—',incharge:val('incharge')||'—'} }
-function imageToDataURL(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
-async function buildPDF(){if(!validate())return null;if(!window.jspdf||!window.jspdf.jsPDF){setStatus('PDF library did not load. Check internet and try again.','err');return null}const {jsPDF}=window.jspdf;const d=getData();const doc=new jsPDF({unit:'mm',format:'a4'});const W=210,M=14,CW=W-2*M;let y=16;
- const addTitle=(t)=>{if(y>270){doc.addPage();y=16}doc.setFillColor(10,38,71);doc.rect(M,y,CW,9,'F');doc.setTextColor(255,255,255);doc.setFontSize(12);doc.setFont('helvetica','bold');doc.text(t,M+3,y+6.2);doc.setTextColor(25,32,42);y+=13};
- const addLine=(label,value)=>{const text=cleanText(label+': '+(value||'—'));doc.setFont('helvetica','normal');doc.setFontSize(10.5);const lines=doc.splitTextToSize(text,CW);if(y+lines.length*5>280){doc.addPage();y=16}doc.text(lines,M,y);y+=lines.length*5+1};
- doc.setFont('helvetica','bold');doc.setFontSize(17);doc.setTextColor(10,38,71);doc.text('FLEET FIELD VISIT REPORT',M,y);y+=7;doc.setDrawColor(232,163,61);doc.setLineWidth(.8);doc.line(M,y,M+CW,y);y+=7;
- addTitle('Executive Details');addLine('Dealership',d.dealership);addLine('Branch',d.branch);addLine('CA / Sales Executive',d.ca);addLine('CRM ID',d.crm);addLine('Visit Date',d.date);addLine('Travel Mode',d.travel);
- addTitle('Field Activity');addLine('Activity Type',d.activities);addLine('Location / Customer Visited',d.location);addLine('Time',d.start+' to '+d.end);addLine('KM Covered',d.km+' km');addLine('Outcome / Key Achievement',d.outcome);
- addTitle('Outcome Summary');addLine('Contacts Met',d.contacts);addLine('Enquiries Generated',d.enquiries);addLine('Test Drives',d.testdrives);
- addTitle('Observations');addLine('What Went Right',d.right);addLine('Blockers / What Went Wrong',d.wrong);addLine('Other Observation',d.other);addLine('Reporting In-charge',d.incharge);
- addTitle('Declaration');addLine('Declaration','Confirmed true and accurate by '+d.ca+'.');
- const files=[...document.getElementById('photos').files];if(files.length){addTitle('Field Photos');for(let i=0;i<Math.min(files.length,4);i++){try{const data=await imageToDataURL(files[i]);if(y>210){doc.addPage();y=16}const props=doc.getImageProperties(data);const maxW=CW,maxH=58;let w=maxW,h=w*props.height/props.width;if(h>maxH){h=maxH;w=h*props.width/props.height}doc.addImage(data,'JPEG',M,y,w,h,undefined,'FAST');y+=h+6}catch(e){addLine('Photo '+(i+1),files[i].name+' (could not embed)')}}}
- const name=('Fleet_Field_Report_'+d.ca+'_'+d.date).replace(/[^a-zA-Z0-9_-]+/g,'_')+'.pdf';return {doc,name}
-}
-async function downloadPDF(){const p=await buildPDF();if(!p)return;p.doc.save(p.name);setStatus('PDF downloaded. Open WhatsApp and attach this PDF to your boss.')}
-async function sharePDF(){const p=await buildPDF();if(!p)return;const blob=p.doc.output('blob');const file=new File([blob],p.name,{type:'application/pdf'});if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({title:'Fleet Field Visit Report',text:'Fleet Field Visit Report',files:[file]});setStatus('Report shared successfully.')}catch(e){if(e.name!=='AbortError')setStatus('Share did not open. Please use Download Report PDF and attach it in WhatsApp.','err')}}else{p.doc.save(p.name);setStatus('Direct file sharing is not supported in this browser. PDF downloaded — attach it in WhatsApp.')}}
-function clearForm(){if(!confirm('Clear all entered details?'))return;location.reload()}
-</script>
-</body>
-</html>
+const TYPES=["Event","Feet on Street","Airport","Fuel Station","Travel Operator","Aggregator","Referrer","Government Department","Corporate House","Test Drive","Delivery","Other"];TYPES.forEach(t=>{const l=document.createElement("label");l.className="chip";l.innerHTML='<input type="checkbox" class="act" value="'+t+'"> '+t;document.getElementById("chips").appendChild(l)});let stopNo=0;
+function addStop(){stopNo++;const d=document.createElement("div");d.className="stop";d.innerHTML='<div class="stophead"><strong>Visit '+stopNo+'</strong><button type="button" class="remove" onclick="removeStop(this)">Remove</button></div><label>Location / Customer Visited *</label><input class="loc" placeholder="Location / customer / operator"><div class="grid2"><div><label>Start Time</label><input type="time" class="start"></div><div><label>End Time</label><input type="time" class="end"></div></div><label>KM Covered</label><input type="number" min="0" class="km" placeholder="0"><label>Outcome / Key Achievement *</label><textarea class="out" placeholder="What happened at this visit?"></textarea>';document.getElementById("stops").appendChild(d)}
+function removeStop(b){if(document.querySelectorAll(".stop").length<=1){show("At least one visit is required.","err");return}b.closest(".stop").remove()}addStop();const now=new Date();document.getElementById("date").value=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+function v(id){return (document.getElementById(id).value||"").trim()}function acts(){return [...document.querySelectorAll(".act:checked")].map(x=>x.value)}function stops(){return [...document.querySelectorAll(".stop")].map((s,i)=>({n:i+1,loc:s.querySelector(".loc").value.trim(),start:s.querySelector(".start").value||"-",end:s.querySelector(".end").value||"-",km:Number(s.querySelector(".km").value)||0,out:s.querySelector(".out").value.trim()}))}function show(msg,type){const s=document.getElementById("status");s.className="status "+type;s.textContent=msg}
+function valid(){const m=[];if(!v("dealership"))m.push("Dealership");if(!v("branch"))m.push("Branch");if(!v("ca"))m.push("Sales Executive");if(!v("date"))m.push("Date");if(!acts().length)m.push("Activity Type");stops().forEach(s=>{if(!s.loc)m.push("Visit "+s.n+" Location");if(!s.out)m.push("Visit "+s.n+" Outcome")});if(!document.getElementById("declare").checked)m.push("Declaration");if(m.length){show("Please complete: "+m.join(", "),"err");return false}return true}
+function report(){const ss=stops(),km=ss.reduce((a,b)=>a+b.km,0);let t=`*FLEET SEGMENT - FIELD ACTIVITY REPORT*\n\n*Dealership:* ${v("dealership")}\n*Branch:* ${v("branch")}\n*Sales Executive / CA:* ${v("ca")}\n*CRM ID:* ${v("crm")||"-"}\n*Date:* ${v("date")}\n*Travel Mode:* ${v("travel")}\n*Total KM:* ${km} km\n\n*Activity Type(s):* ${acts().join(", ")}\n\n*FIELD VISIT / ACTIVITY LOG*`;ss.forEach(s=>t+=`\n\n*${s.n}. ${s.loc}*\nTime: ${s.start} - ${s.end}\nKM: ${s.km}\nOutcome: ${s.out}`);t+=`\n\n*OUTCOME SUMMARY*\nContacts Met: ${Number(v("contacts"))||0}\nEnquiries: ${Number(v("enquiries"))||0}\nTest Drives: ${Number(v("td"))||0}\n\n*KEY OBSERVATION*\nWhat Went Right: ${v("right")||"-"}\nBlockers / What Went Wrong: ${v("wrong")||"-"}\nOther Observation: ${v("other")||"-"}\n\nDeclaration: Confirmed true and accurate by ${v("ca")}.\nReporting In-charge: ${v("incharge")||"-"}`;return t}
+function generate(){if(!valid())return false;document.getElementById("reportText").textContent=report().replace(/\*/g,"");document.getElementById("preview").style.display="block";show("Report generated successfully.","ok");document.getElementById("preview").scrollIntoView({behavior:"smooth",block:"start"});return true}
+function shareWhatsApp(){if(!generate())return;window.location.href="https://wa.me/?text="+encodeURIComponent(report())}
+function savePdf(){if(!generate())return;setTimeout(()=>window.print(),150)}
+async function copyReport(){if(!generate())return;const text=report().replace(/\*/g,"");try{await navigator.clipboard.writeText(text);show("Report copied. Paste it in your WhatsApp group.","ok")}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();show("Report copied. Paste it in your WhatsApp group.","ok")}}
+</script></body></html>
